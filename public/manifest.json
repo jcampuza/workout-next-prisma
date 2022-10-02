@@ -1,6 +1,6 @@
 {
-  "name": "Unit Conversion",
-  "short_name": "UnitConversion",
+  "name": "Workout Tracking",
+  "short_name": "WorkoutTracking",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

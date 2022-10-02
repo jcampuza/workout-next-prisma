@@ -1,8 +1,8 @@
-import { NextPage } from 'next';
 import { ChangeEvent, useState } from 'react';
 import { fix, KG_COEFFICIENT } from '../lib/utils';
+import { NextPageWithAuth } from '../types/next';
 
-const Convert: NextPage = () => {
+const Convert: NextPageWithAuth = () => {
   const { lbs, kgs } = { lbs: 0, kgs: 0 };
 
   const [values, setValues] = useState(() => ({ lbs, kgs }));

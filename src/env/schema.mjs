@@ -1,18 +1,29 @@
 // @ts-check
-import { z } from "zod";
+import { z } from 'zod';
 
 /**
  * Specify your server-side environment variables schema here.
  * This way you can ensure the app isn't built with invalid env vars.
  */
-export const serverSchema = z.object({
+
+const NODE_ENV = process.env.NODE_ENV;
+
+const baseSchema = z.object({
   DATABASE_URL: z.string().url(),
-  NODE_ENV: z.enum(["development", "test", "production"]),
+  NODE_ENV: z.enum(['development', 'test', 'production']),
   NEXTAUTH_SECRET: z.string(),
-  NEXTAUTH_URL: z.string().url(),
   DISCORD_CLIENT_ID: z.string(),
   DISCORD_CLIENT_SECRET: z.string(),
 });
+
+const prodSchema = z.object({});
+
+const devSchema = z.object({
+  NEXTAUTH_URL: z.string().url().optional(),
+});
+
+export const serverSchema =
+  NODE_ENV === 'production' ? baseSchema.merge(prodSchema) : baseSchema.merge(devSchema);
 
 /**
  * Specify your client-side environment variables schema here.

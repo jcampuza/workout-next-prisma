@@ -7,7 +7,6 @@ import type { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import superjson from 'superjson';
 import { AuthGuard } from '../components/AuthGuard';
 import { Layout } from '../components/Layout';
 import { setupViewportHeightListener } from '../lib/viewportHeight';
@@ -95,7 +94,6 @@ export default withTRPC<AppRouter>({
         httpBatchLink({ url }),
       ],
       url,
-      transformer: superjson,
     };
   },
   ssr: false,

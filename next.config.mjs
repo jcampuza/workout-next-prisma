@@ -1,4 +1,9 @@
 import nextPWA from 'next-pwa';
+import nextBundleAnalyzer from '@next/bundle-analyzer';
+
+const withBundleAnalyzer = nextBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 /**
  * Don't be scared of the generics here.
@@ -16,14 +21,16 @@ const withPWA = nextPWA({
   dest: 'public',
 });
 
-export default withPWA(
-  defineNextConfig({
-    reactStrictMode: true,
-    swcMinify: true,
-    // Next.js i18n docs: https://nextjs.org/docs/advanced-features/i18n-routing
-    i18n: {
-      locales: ['en'],
-      defaultLocale: 'en',
-    },
-  })
+export default withBundleAnalyzer(
+  withPWA(
+    defineNextConfig({
+      reactStrictMode: true,
+      swcMinify: true,
+      // Next.js i18n docs: https://nextjs.org/docs/advanced-features/i18n-routing
+      i18n: {
+        locales: ['en'],
+        defaultLocale: 'en',
+      },
+    })
+  )
 );

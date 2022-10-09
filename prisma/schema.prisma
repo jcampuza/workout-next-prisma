@@ -67,6 +67,7 @@ model UserStats {
     bench     Int
     squat     Int
     deadlift  Int
+    ohp       Int      @default(0)
     mode      Mode     @default(LBS)
     updatedAt DateTime @updatedAt
 }

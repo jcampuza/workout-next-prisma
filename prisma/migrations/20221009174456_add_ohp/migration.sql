@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "UserStats" ADD COLUMN     "ohp" INTEGER NOT NULL DEFAULT 0;

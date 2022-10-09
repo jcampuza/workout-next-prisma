@@ -17,6 +17,7 @@ export const statsRouter = createProtectedRouter()
           bench: 0,
           squat: 0,
           deadlift: 0,
+          ohp: 0,
           mode: Mode.LBS,
           userId: ctx.session.user.id,
           updatedAt: new Date(),
@@ -31,18 +32,19 @@ export const statsRouter = createProtectedRouter()
       bench: z.number().int(),
       squat: z.number().int(),
       deadlift: z.number().int(),
+      ohp: z.number().int(),
       mode: z.enum([Mode.KGS, Mode.LBS]),
     }),
     async resolve({ ctx, input }) {
-      console.log(ctx.session.user.id);
       return await ctx.prisma.userStats.upsert({
         where: {
           userId: ctx.session.user.id,
         },
         create: {
           bench: input.bench,
-          deadlift: input.deadlift,
           squat: input.squat,
+          deadlift: input.deadlift,
+          ohp: input.ohp,
           mode: input.mode,
           userId: ctx.session.user.id,
         },
@@ -50,6 +52,7 @@ export const statsRouter = createProtectedRouter()
           bench: input.bench,
           squat: input.squat,
           deadlift: input.deadlift,
+          ohp: input.ohp,
           mode: input.mode,
         },
       });

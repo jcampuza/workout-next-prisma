@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Spinner } from '../components/Spinner';
 import {
   getPercentage,
   getPrimaryRoundedAmount,
   getSecondaryRoundedAmount,
 } from '../lib/conversions';
+import { isClient } from '../lib/isClient';
 import { NextPageWithAuth } from '../types/next';
 import { inferQueryOutput, trpc } from '../utils/trpc';
 
@@ -12,9 +13,17 @@ type Mode = inferQueryOutput<'stats.all'>['mode'];
 
 const PERCENTAGES = [65, 70, 75, 80, 85, 90, 95].map((n) => n / 100);
 
+const KEY = 'HOME__max__';
+
 const Home: NextPageWithAuth = () => {
   const { data } = trpc.useQuery(['stats.all']);
-  const [max, setMax] = useState(0);
+  const [max, setMax] = useState(() => {
+    return isClient() ? Number(localStorage.getItem(KEY)) ?? 0 : 0;
+  });
+
+  useEffect(() => {
+    localStorage.setItem(KEY, max.toString());
+  }, [max]);
 
   if (!data) {
     return <Spinner />;
@@ -32,6 +41,10 @@ const Home: NextPageWithAuth = () => {
     setMax(data.deadlift ?? 0);
   };
 
+  const useOHPMax = () => {
+    setMax(data.ohp ?? 0);
+  };
+
   return (
     <main className="p-4">
       <div className="space-y-2">
@@ -46,9 +59,10 @@ const Home: NextPageWithAuth = () => {
           />
         </label>
         <div className="flex gap-2">
-          <button onClick={useBenchMax}>Bench Max</button>
-          <button onClick={useSquatMax}>Squat Max</button>
-          <button onClick={useDeadliftMax}>Deadlift Max</button>
+          <button onClick={useBenchMax}>Bench</button>
+          <button onClick={useSquatMax}>Squat</button>
+          <button onClick={useDeadliftMax}>Deadlift</button>
+          <button onClick={useOHPMax}>OHP</button>
         </div>
       </div>
 

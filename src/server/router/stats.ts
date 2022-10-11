@@ -10,13 +10,10 @@ export const statsRouter = createProtectedRouter()
         cache.getCacheKey(CACHE_KEYS.ALL_STATS, ctx.session.user.id)
       );
 
-      console.log('CACHED ITEM', cached);
-
       if (cached) {
         return cached;
       }
 
-      console.log('MAKING QUERY?', ctx.session.user.id);
       const results = await ctx.prisma.userStats.findFirst({
         where: {
           userId: ctx.session.user.id,

@@ -9,6 +9,8 @@ import { z } from 'zod';
 const NODE_ENV = process.env.NODE_ENV;
 
 const baseSchema = z.object({
+  REDIS_ENDPOINT: z.string(),
+  REDIS_PASSWORD: z.string(),
   DATABASE_URL: z.string().url(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
   NEXTAUTH_SECRET: z.string(),

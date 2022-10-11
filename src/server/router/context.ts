@@ -37,7 +37,20 @@ export const createContext = async (opts: trpcNext.CreateNextContextOptions) => 
 
 type Context = trpc.inferAsyncReturnType<typeof createContext>;
 
-export const createRouter = () => trpc.router<Context>();
+export const createRouter = () =>
+  trpc.router<Context>().middleware(async ({ path, type, next }) => {
+    const start = Date.now();
+    const result = await next();
+    const durationMs = Date.now() - start;
+
+    if (process.env.NODE_ENV !== 'production') {
+      result.ok
+        ? console.log('OK request timing:', { path, type, durationMs })
+        : console.log('Non-OK request timing', { path, type, durationMs });
+    }
+
+    return result;
+  });
 
 /**
  * Creates a tRPC router that asserts all queries and mutations are from an authorized user. Will throw an unauthorized error if a user is not signed in.

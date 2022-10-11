@@ -1,10 +1,22 @@
 import { Mode, UserStats } from '@prisma/client';
 import { createProtectedRouter } from './context';
 import z from 'zod';
+import { cache, CACHE_KEYS } from '../common/cache';
 
 export const statsRouter = createProtectedRouter()
   .query('all', {
     async resolve({ ctx }): Promise<UserStats> {
+      const cached = await cache.get<UserStats>(
+        cache.getCacheKey(CACHE_KEYS.ALL_STATS, ctx.session.user.id)
+      );
+
+      console.log('CACHED ITEM', cached);
+
+      if (cached) {
+        return cached;
+      }
+
+      console.log('MAKING QUERY?', ctx.session.user.id);
       const results = await ctx.prisma.userStats.findFirst({
         where: {
           userId: ctx.session.user.id,
@@ -24,6 +36,8 @@ export const statsRouter = createProtectedRouter()
         };
       }
 
+      await cache.set(cache.getCacheKey(CACHE_KEYS.ALL_STATS, ctx.session.user.id), results);
+
       return results;
     },
   })
@@ -36,7 +50,7 @@ export const statsRouter = createProtectedRouter()
       mode: z.enum([Mode.KGS, Mode.LBS]),
     }),
     async resolve({ ctx, input }) {
-      return await ctx.prisma.userStats.upsert({
+      const res = await ctx.prisma.userStats.upsert({
         where: {
           userId: ctx.session.user.id,
         },
@@ -56,5 +70,9 @@ export const statsRouter = createProtectedRouter()
           mode: input.mode,
         },
       });
+
+      await cache.invalidate(cache.getCacheKey(CACHE_KEYS.ALL_STATS, ctx.session.user.id));
+
+      return res;
     },
   });

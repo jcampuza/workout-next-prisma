@@ -1,12 +1,33 @@
-import Link from 'next/link';
+import Link, { LinkProps } from 'next/link';
+import { useRouter } from 'next/router';
+import cn from 'classnames';
+
+const NavLink = (props: LinkProps & { activeClassName: string }) => {
+  const { pathname } = useRouter();
+  const { href, ...rest } = props;
+
+  return (
+    <Link href={props.href}>
+      <a {...rest}></a>
+    </Link>
+  );
+};
 
 export const Nav = () => {
+  const { pathname } = useRouter();
+  const isActive = (path: string) => pathname === path;
+
   return (
-    <nav className="mt-auto flex items-center justify-around border-t border-purple-900">
+    <nav className="mt-auto flex items-center justify-around shadow-2xl shadow-purple-900">
       <Link href="/">
         <a
           title="Home"
-          className="flex w-full justify-center border-r border-purple-900 p-4 text-center"
+          className={cn(
+            'flex w-full justify-center border-r border-t-2  border-r-purple-100 border-t-transparent p-4 text-center',
+            {
+              'border-t-purple-900': isActive('/'),
+            }
+          )}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -28,8 +49,13 @@ export const Nav = () => {
 
       <Link href="/convert">
         <a
-          title="Settings"
-          className="flex w-full justify-center border-r border-purple-900 p-4 text-center"
+          title="Convert"
+          className={cn(
+            'flex w-full justify-center border-r border-t-2  border-r-purple-100 border-t-transparent p-4 text-center',
+            {
+              'border-t-purple-900': isActive('/convert'),
+            }
+          )}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -50,14 +76,15 @@ export const Nav = () => {
         </a>
       </Link>
 
-      <Link
-        href="/max"
-        title="Max"
-        className="flex w-full justify-center border-r border-purple-900 p-4 text-center"
-      >
+      <Link href="/max" title="Max">
         <a
           title="Max"
-          className="flex w-full justify-center border-r border-purple-900 p-4 text-center"
+          className={cn(
+            'flex w-full justify-center border-r border-t-2  border-r-purple-100 border-t-transparent p-4 text-center',
+            {
+              'border-t-purple-900': isActive('/max'),
+            }
+          )}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +107,12 @@ export const Nav = () => {
       <Link href="/settings">
         <a
           title="Settings"
-          className="flex w-full justify-center border-purple-900 p-4 text-center"
+          className={cn(
+            'flex w-full justify-center border-r border-t-2  border-r-purple-100 border-t-transparent p-4 text-center',
+            {
+              'border-t-purple-900': isActive('/settings'),
+            }
+          )}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

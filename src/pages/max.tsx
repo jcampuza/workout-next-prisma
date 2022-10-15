@@ -83,6 +83,4 @@ const OneRepMax: NextPageWithAuth = () => {
   );
 };
 
-OneRepMax.auth = true;
-
 export default OneRepMax;

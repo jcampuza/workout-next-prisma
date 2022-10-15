@@ -84,6 +84,4 @@ const Convert: NextPageWithAuth = () => {
   );
 };
 
-Convert.auth = true;
-
 export default Convert;

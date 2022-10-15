@@ -7,7 +7,6 @@ import type { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { AuthGuard } from '../components/AuthGuard';
 import { Layout } from '../components/Layout';
 import { setupViewportHeightListener } from '../lib/viewportHeight';
 import type { AppRouter } from '../server/router';
@@ -24,12 +23,6 @@ const getBaseUrl = () => {
 };
 
 const App = ({ Component, pageProps: { session, ...pageProps } }: CustomAppProps) => {
-  const element = (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
-  );
-
   return (
     <>
       <Head>
@@ -74,7 +67,9 @@ const App = ({ Component, pageProps: { session, ...pageProps } }: CustomAppProps
         />
       </Head>
       <SessionProvider session={session}>
-        {Component.auth ? <AuthGuard>{element}</AuthGuard> : element}
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </SessionProvider>
     </>
   );

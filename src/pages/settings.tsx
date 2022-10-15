@@ -1,11 +1,12 @@
+import { Mode } from '@prisma/client';
 import { signOut } from 'next-auth/react';
 import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'react';
+import z from 'zod';
 import { Spinner } from '../components/Spinner';
 import { fix } from '../lib/utils';
+import { withSignInRequired } from '../lib/withSignInRequired';
 import { NextPageWithAuth } from '../types/next';
 import { inferMutationInput, inferQueryOutput, trpc } from '../utils/trpc';
-import z from 'zod';
-import { Mode } from '@prisma/client';
 
 type StatsQuery = inferQueryOutput<'stats.all'>;
 type StatsUpdateInput = inferMutationInput<'stats.updateAll'>;
@@ -182,6 +183,10 @@ const SettingsLayout = (props: {
   );
 };
 
-Settings.auth = true;
+export const getServerSideProps = withSignInRequired(async () => {
+  return {
+    props: {},
+  };
+});
 
 export default Settings;

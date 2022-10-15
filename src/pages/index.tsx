@@ -6,6 +6,7 @@ import {
   getSecondaryRoundedAmount,
 } from '../lib/conversions';
 import { isClient } from '../lib/isClient';
+import { withSignInRequired } from '../lib/withSignInRequired';
 import { NextPageWithAuth } from '../types/next';
 import { inferQueryOutput, trpc } from '../utils/trpc';
 
@@ -17,6 +18,7 @@ const KEY = 'HOME__max__';
 
 const Home: NextPageWithAuth = () => {
   const { data } = trpc.useQuery(['stats.all']);
+
   const [max, setMax] = useState(() => {
     return isClient() ? Number(localStorage.getItem(KEY)) ?? 0 : 0;
   });
@@ -71,9 +73,11 @@ const Home: NextPageWithAuth = () => {
   );
 };
 
-Home.auth = true;
-
 export default Home;
+
+export const getServerSideProps = withSignInRequired(async () => {
+  return { props: {} };
+});
 
 const PercentageTable = ({ max, mode }: { max: number; mode: Mode }) => {
   return (

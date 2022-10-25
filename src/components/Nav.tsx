@@ -1,17 +1,6 @@
-import Link, { LinkProps } from 'next/link';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import cn from 'classnames';
-
-const NavLink = (props: LinkProps & { activeClassName: string }) => {
-  const { pathname } = useRouter();
-  const { href, ...rest } = props;
-
-  return (
-    <Link href={props.href}>
-      <a {...rest}></a>
-    </Link>
-  );
-};
 
 export const Nav = () => {
   const { pathname } = useRouter();

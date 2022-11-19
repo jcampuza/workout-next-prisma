@@ -8,7 +8,6 @@ import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { Layout } from '../components/Layout';
-import { setupViewportHeightListener } from '../lib/viewportHeight';
 import type { AppRouter } from '../server/router';
 import '../styles/globals.css';
 
@@ -93,5 +92,3 @@ export default withTRPC<AppRouter>({
   },
   ssr: false,
 })(App);
-
-setupViewportHeightListener();

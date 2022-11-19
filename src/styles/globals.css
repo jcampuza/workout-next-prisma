@@ -3,15 +3,10 @@
 @tailwind utilities;
 
 @layer base {
-  .viewport-full {
-    height: calc(var(--vh, 1vh));
-  }
-
   html,
   body,
-  #__next,
-  #root {
-    height: calc(var(--vh, 1vh));
+  #__next {
+    height: 100%;
   }
 
   button {

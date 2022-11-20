@@ -14,7 +14,7 @@ type StatsUpdateInput = inferMutationInput<'stats.updateAll'>;
 const Settings: NextPageWithAuth = () => {
   const utils = trpc.useContext();
   const { data } = trpc.useQuery(['stats.all']);
-  const { mutate } = trpc.useMutation('stats.updateAll', {
+  const { mutate, isLoading } = trpc.useMutation('stats.updateAll', {
     onSuccess: () => {
       utils.invalidateQueries('stats.all');
       alert('successfully updated');
@@ -33,7 +33,12 @@ const Settings: NextPageWithAuth = () => {
   }
 
   return (
-    <SettingsLayout key={data.updatedAt.toString()} settings={data} onSubmit={submitSettings} />
+    <SettingsLayout
+      key={data.updatedAt.toString()}
+      settings={data}
+      onSubmit={submitSettings}
+      loading={isLoading}
+    />
   );
 };
 
@@ -48,6 +53,7 @@ const settingsFormSchema = z.object({
 const SettingsLayout = (props: {
   settings: StatsQuery;
   onSubmit: (input: StatsUpdateInput) => void;
+  loading: boolean;
 }) => {
   const [bench, setBench] = useState(props.settings.bench ?? 0);
   const [squat, setSquat] = useState(props.settings.squat ?? 0);
@@ -167,8 +173,11 @@ const SettingsLayout = (props: {
           </div>
         </div>
 
-        <div>
-          <button type="submit">Update</button>
+        <div className="flex">
+          <button type="submit" disabled={props.loading}>
+            Update
+          </button>
+          {props.loading ? <Spinner className="ml-4 p-0" /> : null}
         </div>
       </form>
 

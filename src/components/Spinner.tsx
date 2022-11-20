@@ -1,6 +1,13 @@
+import cn from 'classnames';
 import React, { useEffect, useState } from 'react';
 
-export const Spinner = ({ children }: { children?: React.ReactNode }) => {
+export const Spinner = ({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) => {
   const [timedOut, setTimedOut] = useState(false);
 
   useEffect(() => {
@@ -13,7 +20,7 @@ export const Spinner = ({ children }: { children?: React.ReactNode }) => {
   }
 
   return (
-    <div role="status" className="grid place-items-center p-8">
+    <div role="status" className={cn('grid place-items-center p-8', className)}>
       <svg
         aria-hidden="true"
         className="mr-2 h-8 w-8 animate-spin fill-purple-900 text-gray-300"

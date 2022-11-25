@@ -3,20 +3,20 @@ import { signOut } from 'next-auth/react';
 import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import z from 'zod';
 import { Spinner } from '../components/Spinner';
+import { RouterInputs, RouterOutputs, trpc } from '../lib/trpc';
 import { fix } from '../lib/utils';
-import { withSignInRequired } from '../lib/withSignInRequired';
 import { NextPageWithAuth } from '../types/next';
-import { inferMutationInput, inferQueryOutput, trpc } from '../utils/trpc';
 
-type StatsQuery = inferQueryOutput<'stats.all'>;
-type StatsUpdateInput = inferMutationInput<'stats.updateAll'>;
+type StatsQuery = RouterOutputs['stats']['all'];
+type StatsUpdateInput = RouterInputs['stats']['updateAll'];
 
 const Settings: NextPageWithAuth = () => {
   const utils = trpc.useContext();
-  const { data } = trpc.useQuery(['stats.all']);
-  const { mutate, isLoading } = trpc.useMutation('stats.updateAll', {
+
+  const { data } = trpc.stats.all.useQuery();
+  const { mutate, isLoading } = trpc.stats.updateAll.useMutation({
     onSuccess: () => {
-      utils.invalidateQueries('stats.all');
+      utils.stats.all.invalidate();
       alert('successfully updated');
     },
     onError(err) {
@@ -192,10 +192,6 @@ const SettingsLayout = (props: {
   );
 };
 
-export const getServerSideProps = withSignInRequired(async () => {
-  return {
-    props: {},
-  };
-});
+Settings.auth = true;
 
 export default Settings;

@@ -1,23 +1,14 @@
 import { useEffect, useState } from 'react';
+import { PercentageTable } from '../components/PercentageTable';
 import { Spinner } from '../components/Spinner';
-import {
-  getPercentage,
-  getPrimaryRoundedAmount,
-  getSecondaryRoundedAmount,
-} from '../lib/conversions';
 import { isClient } from '../lib/isClient';
-import { withSignInRequired } from '../lib/withSignInRequired';
+import { trpc } from '../lib/trpc';
 import { NextPageWithAuth } from '../types/next';
-import { inferQueryOutput, trpc } from '../utils/trpc';
-
-type Mode = inferQueryOutput<'stats.all'>['mode'];
-
-const PERCENTAGES = [65, 70, 75, 80, 85, 90, 95].map((n) => n / 100);
 
 const KEY = 'HOME__max__';
 
 const Home: NextPageWithAuth = () => {
-  const { data } = trpc.useQuery(['stats.all']);
+  const { data } = trpc.stats.all.useQuery();
 
   const [max, setMax] = useState(() => {
     return isClient() ? Number(localStorage.getItem(KEY)) ?? 0 : 0;
@@ -73,41 +64,6 @@ const Home: NextPageWithAuth = () => {
   );
 };
 
+Home.auth = true;
+
 export default Home;
-
-export const getServerSideProps = withSignInRequired(async () => {
-  return { props: {} };
-});
-
-const PercentageTable = ({ max, mode }: { max: number; mode: Mode }) => {
-  return (
-    <table>
-      <thead>
-        <tr>
-          <th>%</th>
-          <th>{mode}</th>
-          <th>
-            {mode} -&gt; {mode === 'KGS' ? 'LBS' : 'KGS'}
-          </th>
-          <th>%</th>
-        </tr>
-      </thead>
-      <tbody>
-        {PERCENTAGES.map((percentage) => {
-          const primaryRoundedAmount = getPrimaryRoundedAmount(max, percentage, mode);
-          const secondaryRoundedAmount = getSecondaryRoundedAmount(primaryRoundedAmount, mode);
-          const actualPercent = getPercentage(primaryRoundedAmount, max, mode);
-
-          return (
-            <tr key={percentage}>
-              <td>{percentage * 100}%</td>
-              <td>{primaryRoundedAmount}</td>
-              <td>{secondaryRoundedAmount}</td>
-              <td>{actualPercent}%</td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
-  );
-};

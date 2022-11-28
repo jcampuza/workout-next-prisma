@@ -149,7 +149,7 @@ export const Settings = (props: { settings: UserStats }) => {
           <button type="submit" disabled={isSubmitting}>
             Update
           </button>
-          {!isSubmitting ? <Spinner className="ml-4" /> : null}
+          {isSubmitting ? <Spinner className="ml-4" /> : null}
         </div>
       </form>
 

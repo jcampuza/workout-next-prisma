@@ -3,23 +3,29 @@
 import { cn } from '@/lib/classnames';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import React from 'react';
+
+const NavLink = (props: { isActive: boolean } & React.ComponentProps<typeof Link>) => {
+  return (
+    <Link
+      {...props}
+      className={cn(
+        'flex w-full justify-center border-r border-t-2  border-r-purple-100 border-t-transparent p-4 text-center lg:border-t-0 lg:border-l-2 lg:border-r-0',
+        {
+          'border-t-purple-900 bg-purple-50 lg:border-l-purple-900': props.isActive,
+        }
+      )}
+    ></Link>
+  );
+};
 
 export const Nav = () => {
   const segment = usePathname();
   const isActive = (path: string) => segment === path;
 
   return (
-    <nav className="mt-auto flex items-center justify-around shadow-2xl shadow-purple-900">
-      <Link
-        href="/"
-        title="Home"
-        className={cn(
-          'flex w-full justify-center border-r border-t-2  border-r-purple-100 border-t-transparent p-4 text-center',
-          {
-            'border-t-purple-900': isActive('/'),
-          }
-        )}
-      >
+    <nav className="mt-auto flex items-center justify-around shadow-2xl shadow-purple-900 lg:mt-0 lg:flex-col lg:justify-start lg:shadow-xl">
+      <NavLink href="/" title="Home" isActive={isActive('/')}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width={24}
@@ -35,18 +41,9 @@ export const Nav = () => {
             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
           />
         </svg>
-      </Link>
+      </NavLink>
 
-      <Link
-        href="/convert"
-        title="Convert"
-        className={cn(
-          'flex w-full justify-center border-r border-t-2  border-r-purple-100 border-t-transparent p-4 text-center',
-          {
-            'border-t-purple-900': isActive('/convert'),
-          }
-        )}
-      >
+      <NavLink href="/convert" title="Convert" isActive={isActive('/convert')}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="stroke-purple-900"
@@ -63,18 +60,9 @@ export const Nav = () => {
             d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
           />
         </svg>
-      </Link>
+      </NavLink>
 
-      <Link
-        href="/max"
-        title="Max"
-        className={cn(
-          'flex w-full justify-center border-r border-t-2  border-r-purple-100 border-t-transparent p-4 text-center',
-          {
-            'border-t-purple-900': isActive('/max'),
-          }
-        )}
-      >
+      <NavLink href="/max" title="Max" isActive={isActive('/max')}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -90,18 +78,9 @@ export const Nav = () => {
             d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 01-2.031.352 5.989 5.989 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971z"
           />
         </svg>
-      </Link>
+      </NavLink>
 
-      <Link
-        href="/settings"
-        title="Settings"
-        className={cn(
-          'flex w-full justify-center border-r border-t-2  border-r-purple-100 border-t-transparent p-4 text-center',
-          {
-            'border-t-purple-900': isActive('/settings'),
-          }
-        )}
-      >
+      <NavLink href="/settings" title="Settings" isActive={isActive('/settings')}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width={24}
@@ -118,7 +97,7 @@ export const Nav = () => {
           />
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
-      </Link>
+      </NavLink>
     </nav>
   );
 };

@@ -8,7 +8,9 @@ import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'react';
 
-export const Settings = (props: { settings: UserStats }) => {
+type UserStatsProp = Omit<UserStats, 'updatedAt'> & { updatedAt: string };
+
+export const Settings = (props: { settings: UserStatsProp }) => {
   const router = useRouter();
   const [bench, setBench] = useState(props.settings.bench ?? 0);
   const [squat, setSquat] = useState(props.settings.squat ?? 0);

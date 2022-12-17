@@ -5,14 +5,17 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 
-const NavLink = (props: { isActive: boolean } & React.ComponentProps<typeof Link>) => {
+const NavLink = ({
+  isActive,
+  ...props
+}: { isActive: boolean } & React.ComponentProps<typeof Link>) => {
   return (
     <Link
       {...props}
       className={cn(
         'flex w-full justify-center border-r border-t-2  border-r-purple-100 border-t-transparent p-4 text-center lg:border-t-0 lg:border-l-2 lg:border-r-0',
         {
-          'border-t-purple-900 bg-purple-50 lg:border-l-purple-900': props.isActive,
+          'border-t-purple-900 bg-purple-50 lg:border-l-purple-900': isActive,
         }
       )}
     ></Link>

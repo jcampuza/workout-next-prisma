@@ -48,7 +48,7 @@ const OneRepMax = () => {
     setReps(e.currentTarget.value);
   };
 
-  const areNumbericValues = isNumeric(reps) && isNumeric(weight);
+  const areNumericValues = isNumeric(reps) && isNumeric(weight);
   const respNum = Number(reps);
   const repsWeight = Number(weight);
 
@@ -75,10 +75,10 @@ const OneRepMax = () => {
         </label>
       </div>
 
-      {areNumbericValues ? (
+      {areNumericValues ? (
         <div>Estimated One Rep Max: {getOneRepMax() ?? 'Please enter reps below 30'}</div>
       ) : (
-        <div>Please enter numberic values</div>
+        <div>Please enter numeric values</div>
       )}
     </main>
   );

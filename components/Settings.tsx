@@ -6,12 +6,21 @@ import { fix } from '@/lib/utils';
 import { UserStats } from '@prisma/client';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useMemo,
+  useState,
+  useTransition,
+} from 'react';
 
 type UserStatsProp = Omit<UserStats, 'updatedAt'> & { updatedAt: string };
 
 export const Settings = (props: { settings: UserStatsProp }) => {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const [bench, setBench] = useState(props.settings.bench ?? 0);
   const [squat, setSquat] = useState(props.settings.squat ?? 0);
   const [deadlift, setDeadlift] = useState(props.settings.deadlift ?? 0);
@@ -57,18 +66,20 @@ export const Settings = (props: { settings: UserStatsProp }) => {
       alert('SUCCESS');
     }
 
-    router.refresh();
+    startTransition(() => {
+      router.refresh();
+    });
   };
 
-  const getLastUpdatedTime = () => {
+  const lastUpdatedTime = useMemo(() => {
     const curr = props.settings.updatedAt;
     if (curr) {
       return new Date(curr).toLocaleDateString();
     }
     return '';
-  };
+  }, [props.settings.updatedAt]);
 
-  const lastUpdatedTime = getLastUpdatedTime();
+  const isMutating = isSubmitting || isPending;
 
   return (
     <main className="p-4">
@@ -148,10 +159,10 @@ export const Settings = (props: { settings: UserStatsProp }) => {
         </div>
 
         <div className="flex">
-          <button type="submit" disabled={isSubmitting}>
+          <button type="submit" disabled={isMutating}>
             Update
           </button>
-          {isSubmitting ? <Spinner className="ml-4" /> : null}
+          {isMutating ? <Spinner className="ml-4" /> : null}
         </div>
       </form>
 

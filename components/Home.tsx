@@ -1,26 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { PercentageTable } from '@/components/PercentageTable';
 import { UserStats } from '@prisma/client';
-import { useIsMounted } from '@/lib/useIsMounted';
+import { useLocalStorage } from '@/lib/useLocalStorage';
 
-export const Home = ({ stats }: { stats: UserStats }) => {
-  const mounted = useIsMounted();
-
-  return <main className="p-4">{mounted && <HomeControls stats={stats} />}</main>;
-};
+type UserStatsProp = Omit<UserStats, 'updatedAt'> & { updatedAt: string };
 
 const KEY = 'HOME__max__';
 
-const HomeControls = ({ stats }: { stats: UserStats }) => {
-  const [max, setMax] = useState(() => {
-    return Number(localStorage.getItem(KEY)) ?? 0;
-  });
-
-  useEffect(() => {
-    localStorage.setItem(KEY, max.toString());
-  }, [max]);
+export const Home = ({ stats }: { stats: UserStatsProp }) => {
+  const [max, setMax] = useLocalStorage(KEY, 0);
 
   const useSquatMax = () => {
     setMax(stats.squat ?? 0);
@@ -39,7 +28,7 @@ const HomeControls = ({ stats }: { stats: UserStats }) => {
   };
 
   return (
-    <>
+    <main className="p-4">
       <div className="space-y-2">
         <label className="flex flex-col">
           <span>Training Max ({stats.mode})</span>
@@ -60,6 +49,6 @@ const HomeControls = ({ stats }: { stats: UserStats }) => {
       </div>
 
       <PercentageTable max={max} mode={stats.mode} />
-    </>
+    </main>
   );
 };

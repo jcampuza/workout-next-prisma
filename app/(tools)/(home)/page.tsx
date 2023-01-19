@@ -12,5 +12,5 @@ export default async function HomePage() {
 
   const stats = await getUserStats(user);
 
-  return <Home stats={stats} />;
+  return <Home stats={{ ...stats, updatedAt: stats.updatedAt.toISOString() }} />;
 }

@@ -18,7 +18,7 @@ export const authOptions: NextAuthOptions = {
     signIn: '/login',
   },
   adapter: PrismaAdapter(prisma),
-  secret: '123',
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
